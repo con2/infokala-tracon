@@ -1,0 +1,16 @@
+*.pyc
+.idea/
+*.sqlite3
+/static/
+build/
+dist/
+nohup.out
+pip-log.txt
+virtualenv/
+.bundle/
+tmp/
+src/
+.sublime-*
+node_modules/
+bower_components/
+*.egg-info/

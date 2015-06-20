@@ -1,6 +1,9 @@
-# Tracon's deployment of [Infokala](/kcsry/infokala)
+# Tracon's deployment of [Infokala]
 
-This is a [Kompassi](/tracon/kompassi)-integrated deployment of Infokala that authenticates users from Kompassi via OAuth2 and gets event info from Kompassi using the public API of Kompassi.
+This is a [Kompassi]-integrated deployment of [Infokala] that authenticates users from Kompassi via OAuth2 and gets event info from Kompassi using the public API of Kompassi.
+
+[Infokala]: https://github.com/kcsry/infokala "Infokala, the Info Log Management System for Tracon & Desucon"
+[Kompassi]: https://github.com/tracon/kompassi "Kompassi, the Tracon Event Management System"
 
 ## Getting started
 

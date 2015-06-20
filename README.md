@@ -5,13 +5,19 @@ This is a [Kompassi]-integrated deployment of [Infokala] that authenticates user
 [Infokala]: https://github.com/kcsry/infokala "Infokala, the Info Log Management System for Tracon & Desucon"
 [Kompassi]: https://github.com/tracon/kompassi "Kompassi, the Tracon Event Management System"
 
+## [Infokala] is installed using `pip`
+
+Note that this repository does not contain the actual source code for the [Infokala] application. The actual application consists of the package called `infokala` that is installed using `pip` from `requirements.txt`. The version of Infokala to use is selected in `requirements.txt`.
+
+This repository is responsible for setting up the Tracon/Kompassi specific bits for Infokala, such as the Kompassi OAuth2 based authentication and group membership based authorization.
+
 ## Getting started
 
 First, make sure `kompassi.dev` and `infokala.dev` resolve to localhost via `/etc/hosts`:
 
     127.0.0.1 localhost kompassi.dev infokala.dev
 
-Next, install and run development instance of [Kompassi](/tracon/kompassi) if you don't yet have one:
+Next, install and run development instance of [Kompassi] if you don't yet have one:
 
     virtualenv venv-kompassi
     source venv-kompassi/bin/activate

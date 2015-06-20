@@ -2,4 +2,4 @@ Django>=1.7
 python-dateutil>=2.4
 gunicorn>=19
 requests-oauthlib>=0.4
-git+https://github.com/kcsry/infokala@0.0.3#egg=infokala==0.0.3
+git+https://github.com/kcsry/infokala@0.0.4#egg=infokala==0.0.4

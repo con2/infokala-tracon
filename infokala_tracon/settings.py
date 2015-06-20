@@ -2,7 +2,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 def mkpath(*args):
-    return os.path.join(BASE_DIR, '..', *args)
+    return os.path.abspath(os.path.join(BASE_DIR, *args))
 
 SECRET_KEY = '826)vr#_u+^taupre9!ixzb9(qxmyadij6v^jy%l+5pvd0*tv8'
 
@@ -79,6 +79,7 @@ USE_L10N = False
 USE_TZ = True
 
 STATIC_URL = '/static/'
+STATIC_ROOT = mkpath('static')
 APPEND_SLASH = False
 
 LOGIN_URL = '/oauth2/login'

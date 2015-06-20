@@ -1,10 +1,34 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from django.views.decorators.csrf import csrf_exempt
+
+from .views import (
+    ConfigView,
+    logout_view,
+    MessagesView,
+    MessageView,
+    slash_redirect_view,
+    static_app_view,
+)
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'infokala_tracon.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
+    # url(r'^$', RedirectView.as_view(url='/events/test/messages/')),
+    url(r'^events/(?P<event_slug>[a-z0-9-]+)/messages/$', static_app_view),
+    url(r'^events/[a-z0-9-]+/messages$', slash_redirect_view),
+    url(r'^events/(?P<event_slug>[a-z0-9-]+)/messages/config.js$',
+        csrf_exempt(ConfigView.as_view()),
+        name='infokala_config_view',
+    ),
+    url(r'^api/v1/events/(?P<event_slug>[a-z0-9-]+)/messages/?$',
+        csrf_exempt(MessagesView.as_view()),
+        name='infokala_messages_view',
+    ),
+    url(r'^api/v1/events/(?P<event_slug>[a-z0-9-]+)/messages/(?P<message_id>\d+)/?$',
+        csrf_exempt(MessageView.as_view()),
+        name='infokala_message_view',
+    ),
 
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^logout/?$', logout_view),
+    url(r'', include('kompassi_oauth2.urls')),
 )

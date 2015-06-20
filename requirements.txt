@@ -1,0 +1,4 @@
+Django>=1.7
+python-dateutil>=2.4
+gunicorn>=19
+requests-oauthlib>=0.4

@@ -18,7 +18,7 @@ urlpatterns = patterns('',
         RedirectView.as_view(url='/events/traconx/messages'),
         name='infokala_frontpage_redirect_view',
     ),
-    url(r'^events/(?P<event_slug>[a-z0-9-]+)/messages/$', static_app_view)
+    url(r'^events/(?P<event_slug>[a-z0-9-]+)/messages/$', static_app_view),
     url(r'^events/[a-z0-9-]+/messages$', slash_redirect_view),
     url(r'^events/(?P<event_slug>[a-z0-9-]+)/messages/config.js$',
         csrf_exempt(ConfigView.as_view()),

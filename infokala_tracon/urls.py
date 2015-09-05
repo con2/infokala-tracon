@@ -15,7 +15,7 @@ from .views import (
 urlpatterns = patterns('',
     # XXX hardcoded
     url(r'^$',
-        RedirectView.as_view(url='/events/traconx/messages')),
+        RedirectView.as_view(url='/events/traconx/messages'),
         name='infokala_frontpage_redirect_view',
     ),
     url(r'^events/(?P<event_slug>[a-z0-9-]+)/messages/$', static_app_view)

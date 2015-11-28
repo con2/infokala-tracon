@@ -1,5 +1,5 @@
 Django>=1.7
-git+https://github.com/kcsry/infokala@0.1.0#egg=infokala==0.1.0
+git+https://github.com/kcsry/infokala@0.1.1#egg=infokala==0.1.1
 gunicorn>=19
 ndg-httpsclient==0.4.0
 pyasn1==0.1.8

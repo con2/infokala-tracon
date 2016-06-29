@@ -8,11 +8,15 @@ from django.shortcuts import redirect, render
 from infokala.views import (
     MessagesView as InfokalaMessagesView,
     MessageView as InfokalaMessageView,
+    MessageEventsView as InfokalaMessageEventsView,
     ConfigView as InfokalaConfigView,
 )
 
 
 def is_user_allowed_to_access(user, event):
+    if user.is_superuser:
+        return True
+
     group_names = [
         tmpl.format(
             kompassi_installation_slug=settings.KOMPASSI_INSTALLATION_SLUG,
@@ -31,6 +35,7 @@ class AccessControlMixin(object):
 
 class MessagesView(AccessControlMixin, InfokalaMessagesView): pass
 class MessageView(AccessControlMixin, InfokalaMessageView): pass
+class MessageEventsView(AccessControlMixin, InfokalaMessageEventsView): pass
 class ConfigView(AccessControlMixin, InfokalaConfigView): pass
 
 

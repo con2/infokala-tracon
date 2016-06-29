@@ -8,6 +8,7 @@ from .views import (
     logout_view,
     MessagesView,
     MessageView,
+    MessageEventsView,
     slash_redirect_view,
     static_app_view,
 )
@@ -32,6 +33,11 @@ urlpatterns = patterns('',
         csrf_exempt(MessageView.as_view()),
         name='infokala_message_view',
     ),
+    url(r'^api/v1/events/(?P<event_slug>[a-z0-9-]+)/messages/(?P<message_id>\d+)/events/?$',
+        csrf_exempt(MessageEventsView.as_view()),
+        name='infokala_message_events_view',
+    ),
+
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^logout/?$', logout_view),

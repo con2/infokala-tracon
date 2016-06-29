@@ -36,3 +36,7 @@ def get_event_or_404(slug):
         raise Http404('Event not found: {}'.format(slug))
 
     return event
+
+
+if settings.DEBUG:
+    _event_cache['test-event'] = Event('test-event', 'Test event')

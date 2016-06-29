@@ -1,3 +1,8 @@
+# encoding: utf-8
+
+from __future__ import unicode_literals
+
+from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.views.decorators.csrf import csrf_exempt
@@ -16,7 +21,7 @@ from .views import (
 urlpatterns = patterns('',
     # XXX hardcoded
     url(r'^$',
-        RedirectView.as_view(url='/events/hitpoint2015/messages'),
+        RedirectView.as_view(url='/events/{default_event}/messages'.format(default_event=settings.INFOKALA_DEFAULT_EVENT)),
         name='infokala_frontpage_redirect_view',
     ),
     url(r'^events/(?P<event_slug>[a-z0-9-]+)/messages/$', static_app_view),

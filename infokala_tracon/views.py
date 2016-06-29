@@ -56,5 +56,5 @@ def slash_redirect_view(request):
 def logout_view(request):
     logout(request)
 
-    next_page = request.GET.get('next', '/')
+    next_page = request.GET.get('next', settings.LOGOUT_REDIRECT_URL)
     return redirect(next_page)

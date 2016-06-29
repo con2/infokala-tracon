@@ -84,6 +84,7 @@ APPEND_SLASH = False
 
 LOGIN_URL = '/oauth2/login'
 LOGOUT_URL = '/logout'
+LOGOUT_REDIRECT_URL = 'https://kompassi.eu/logout'
 
 from .event import get_event_or_404 as INFOKALA_GET_EVENT_OR_404
 

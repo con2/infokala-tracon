@@ -7,7 +7,9 @@ This is a [Kompassi]-integrated deployment of [Infokala] that authenticates user
 
 ## [Infokala] is installed using `pip`
 
-Note that this repository does not contain the actual source code for the [Infokala] application. The actual application consists of the package called `infokala` that is installed using `pip` from `requirements.txt`. The version of Infokala to use is selected in `requirements.txt`.
+Note that this repository does not contain the actual source code for the [Infokala] application. The actual application consists of the package called `infokala` that is installed using `pip`.
+
+Please check out a suitable version of Infokala and install it in the same virtualenv using eg. `pip install -e .` (see below).
 
 This repository is responsible for setting up the Tracon/Kompassi specific bits for Infokala, such as the Kompassi OAuth2 based authentication and group membership based authorization.
 
@@ -32,7 +34,13 @@ Next, install and run development instance of [Kompassi] if you don't yet have o
 
 Now, in another terminal, install and run this application:
 
-    source venv-kompassi/bin/activate
+    virtualenv venv-infokala
+    source venv-infokala/bin/activate
+    git clone https://github.com/tracon/infokala.git
+    cd infokala
+    pip install -e .
+    cd ..
+
     git clone https://github.com/tracon/infokala-tracon.git
     cd infokala-tracon
     pip install -r requirements.txt

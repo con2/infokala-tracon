@@ -8,14 +8,17 @@ def setup_basic_workflow(event_slug):
 
     basic_workflow, unused = Workflow.objects.get_or_create(
         name=u'Perustyönkulku',
+        slug='basic'
     )
 
     lost_and_found_workflow, unused = Workflow.objects.get_or_create(
         name=u'Löytötavaratyönkulku',
+        slug='lost-and-found'
     )
 
     simple_workflow, unused = Workflow.objects.get_or_create(
         name=u'Yksinkertainen työnkulku',
+        slug='simple'
     )
 
     order = 0

@@ -92,7 +92,7 @@ INFOKALA_ACCESS_GROUP_TEMPLATES = [
     '{kompassi_installation_slug}-{event_slug}-labour-conitea',
     '{kompassi_installation_slug}-{event_slug}-labour-info',
 ]
-INFOKALA_DEFAULT_EVENT = 'finncon2016'
+INFOKALA_DEFAULT_EVENT = 'tracon11'
 
 KOMPASSI_INSTALLATION_SLUG = 'turskadev'
 KOMPASSI_HOST = 'http://kompassi.dev:8000'

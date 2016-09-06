@@ -1,36 +1,37 @@
+# encoding: utf-8
+
+from __future__ import absolute_import, unicode_literals
+
 import os
+from datetime import datetime, timedelta
+from email.utils import parseaddr
+
+from django.utils.translation import ugettext_lazy as _
+
+import environ
+
+
+env = environ.Env(DEBUG=(bool, False),)
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
 
 def mkpath(*args):
     return os.path.abspath(os.path.join(BASE_DIR, *args))
 
-SECRET_KEY = '826)vr#_u+^taupre9!ixzb9(qxmyadij6v^jy%l+5pvd0*tv8'
 
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
+DEBUG = env.bool('DEBUG', default=False)
+SECRET_KEY = env.str('SECRET_KEY', default=('' if not DEBUG else 'xxx'))
+ALLOWED_HOSTS = env('ALLOWED_HOSTS', default='').split()
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+ADMINS = [parseaddr(addr) for addr in env('ADMINS', default='').split(',') if addr]
 
-ALLOWED_HOSTS = []
+# Sending email
+if env('EMAIL_HOST', default=''):
+    EMAIL_HOST = env('EMAIL_HOST')
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
 
-if DEBUG:
-    # XXX Monkey patch is_secure_transport to allow development over insecure HTTP
-
-    from warnings import warn
-    warn(UserWarning("Monkey_patching oauthlib.oauth2:is_secure_transport to allow OAuth2 over HTTP. Never do this in production!"))
-
-    fake_is_secure_transport = lambda token_url: True
-
-    import oauthlib.oauth2
-    import requests_oauthlib.oauth2_session
-    import oauthlib.oauth2.rfc6749.parameters
-    import oauthlib.oauth2.rfc6749.clients.base
-
-    for module in [
-        oauthlib.oauth2,
-        requests_oauthlib.oauth2_session,
-        oauthlib.oauth2.rfc6749.parameters,
-        oauthlib.oauth2.rfc6749.clients.base,
-    ]:
-        module.is_secure_transport = fake_is_secure_transport
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='spam@example.com')
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -64,10 +65,7 @@ ROOT_URLCONF = 'infokala_tracon.urls'
 WSGI_APPLICATION = 'infokala_tracon.wsgi.application'
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    'default': env.db(default='sqlite:///infokala.sqlite3'),
 }
 
 LANGUAGE_CODE = 'fi-fi'
@@ -92,15 +90,15 @@ INFOKALA_ACCESS_GROUP_TEMPLATES = [
     '{kompassi_installation_slug}-{event_slug}-labour-conitea',
     '{kompassi_installation_slug}-{event_slug}-labour-info',
 ]
-INFOKALA_DEFAULT_EVENT = 'tracon11'
+INFOKALA_DEFAULT_EVENT = env('INFOKALA_DEFAULT_EVENT', default='tracon11')
 
-KOMPASSI_INSTALLATION_SLUG = 'turskadev'
-KOMPASSI_HOST = 'http://kompassi.dev:8000'
+KOMPASSI_INSTALLATION_SLUG = env('KOMPASSI_INSTALLATION_SLUG', default='turska')
+KOMPASSI_HOST = env('KOMPASSI_HOST', default='https://kompassi.eu')
 KOMPASSI_OAUTH2_AUTHORIZATION_URL = '{KOMPASSI_HOST}/oauth2/authorize'.format(**locals())
 KOMPASSI_OAUTH2_TOKEN_URL = '{KOMPASSI_HOST}/oauth2/token'.format(**locals())
-KOMPASSI_OAUTH2_CLIENT_ID = 'kompassi_insecure_test_client_id'
-KOMPASSI_OAUTH2_CLIENT_SECRET = 'kompassi_insecure_test_client_secret'
+KOMPASSI_OAUTH2_CLIENT_ID = env('KOMPASSI_OAUTH2_CLIENT_ID', default='kompassi_insecure_test_client_id')
+KOMPASSI_OAUTH2_CLIENT_SECRET = env('KOMPASSI_OAUTH2_CLIENT_SECRET', default='kompassi_insecure_test_client_secret')
 KOMPASSI_OAUTH2_SCOPE = ['read']
 KOMPASSI_API_V2_USER_INFO_URL = '{KOMPASSI_HOST}/api/v2/people/me'.format(**locals())
 KOMPASSI_API_V2_EVENT_INFO_URL_TEMPLATE = '{kompassi_host}/api/v2/events/{event_slug}'
-KOMPASSI_ADMIN_GROUP = 'admins'
+KOMPASSI_ADMIN_GROUP = env('KOMPASSI_ADMIN_GROUP', default='admins')

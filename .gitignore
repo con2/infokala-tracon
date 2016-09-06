@@ -14,3 +14,4 @@ src/
 node_modules/
 bower_components/
 *.egg-info/
+*.log

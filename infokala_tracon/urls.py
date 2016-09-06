@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 from django.conf import settings
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import RedirectView
@@ -18,7 +18,7 @@ from .views import (
     static_app_view,
 )
 
-urlpatterns = patterns('',
+urlpatterns = [
     # XXX hardcoded
     url(r'^$',
         RedirectView.as_view(url='/events/{default_event}/messages'.format(default_event=settings.INFOKALA_DEFAULT_EVENT)),
@@ -47,4 +47,4 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^logout/?$', logout_view),
     url(r'', include('kompassi_oauth2.urls')),
-)
+]

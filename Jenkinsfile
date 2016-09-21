@@ -22,7 +22,7 @@ stage("Build") {
 
 stage("Push") {
   node {
-    sh "docker tag ${image} tracon/infokala:latest && docker push tracon/infokala:latest"
+    sh "docker tag ${image} tracon/infokala:latest && docker push tracon/infokala:latest && docker rmi ${image}"
   }
 }
 

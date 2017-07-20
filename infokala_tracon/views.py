@@ -20,6 +20,7 @@ def is_user_allowed_to_access(user, event):
     group_names = [
         tmpl.format(
             kompassi_installation_slug=settings.KOMPASSI_INSTALLATION_SLUG,
+            infokala_installation_slug=settings.INFOKALA_INSTALLATION_SLUG,
             event_slug=event.slug
         )
         for tmpl in settings.INFOKALA_ACCESS_GROUP_TEMPLATES

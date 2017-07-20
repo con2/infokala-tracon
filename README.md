@@ -57,13 +57,15 @@ Authorization is performed using group membership information extracted from the
 
 By default, these are configured as follows:
 
-    INFOKALA_ACCESS_GROUP_TEMPLATES = [
-        '{kompassi_installation_slug}-{event_slug}-labour-conitea',
-        '{kompassi_installation_slug}-{event_slug}-labour-info',
-    ]
-
-    KOMPASSI_INSTALLATION_SLUG = 'turska'
-    KOMPASSI_ADMIN_GROUP = 'admins'
+```python
+INFOKALA_ACCESS_GROUP_TEMPLATES = [
+    '{kompassi_installation_slug}-{event_slug}-labour-conitea',
+    '{kompassi_installation_slug}-{event_slug}-labour-info',
+    '{infokala_installation_slug}-{event_slug}-users',
+]
+INFOKALA_INSTALLATION_SLUG = env('INFOKALA_INSTALLATION_SLUG', default='infokala')
+KOMPASSI_INSTALLATION_SLUG = env('KOMPASSI_INSTALLATION_SLUG', default='turska')
+```
 
 That would basically grant access to the organizing committee (*conitea*) and info workers.
 

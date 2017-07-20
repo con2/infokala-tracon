@@ -103,8 +103,10 @@ from .event import get_event_or_404 as INFOKALA_GET_EVENT_OR_404
 INFOKALA_ACCESS_GROUP_TEMPLATES = [
     '{kompassi_installation_slug}-{event_slug}-labour-conitea',
     '{kompassi_installation_slug}-{event_slug}-labour-info',
+    '{infokala_installation_slug}-{event_slug}-users',
 ]
 INFOKALA_DEFAULT_EVENT = env('INFOKALA_DEFAULT_EVENT', default='tracon2017')
+INFOKALA_INSTALLATION_SLUG = env('INFOKALA_INSTALLATION_SLUG', default='infokala')
 
 KOMPASSI_INSTALLATION_SLUG = env('KOMPASSI_INSTALLATION_SLUG', default='turska')
 KOMPASSI_HOST = env('KOMPASSI_HOST', default='https://kompassi.eu')

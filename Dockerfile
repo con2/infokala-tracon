@@ -6,7 +6,7 @@ RUN git clone --depth=1 https://github.com/kcsry/infokala && \
     rm -rf infokala/.git && \
     cd infokala && \
     npm install && \
-    NODE_ENV=production node_modules/.bin/gulp build && \
+    NODE_ENV=production npm run prepublish && \
     rm -rf node_modules && \
     mkdir /usr/src/app/infokala-tracon && \
     groupadd -r infokala && useradd -r -g infokala infokala

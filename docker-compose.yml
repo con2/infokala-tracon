@@ -1,0 +1,26 @@
+version: '2'
+services:
+  web:
+    build: .
+    command: scripts/wait-for-it.sh postgres:5432 -- python manage.py docker_start
+    ports:
+      - 8000:8000
+    links:
+      - postgres
+    volumes:
+      - .:/usr/src/app/infokala-tracon
+    environment:
+      PYTHONUNBUFFERED: 1
+      DEBUG: 1
+      DATABASE_URL: psql://infokala:secret@postgres/infokala
+  postgres:
+    image: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: infokala
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: infokala
+volumes:
+  postgres-data:
+    driver: local

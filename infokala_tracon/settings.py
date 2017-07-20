@@ -6,8 +6,6 @@ import os
 from datetime import datetime, timedelta
 from email.utils import parseaddr
 
-from django.utils.translation import ugettext_lazy as _
-
 import environ
 
 
@@ -68,6 +66,22 @@ DATABASES = {
     'default': env.db(default='sqlite:///infokala.sqlite3'),
 }
 
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
 LANGUAGE_CODE = 'fi-fi'
 
 TIME_ZONE = 'Europe/Helsinki'
@@ -90,7 +104,7 @@ INFOKALA_ACCESS_GROUP_TEMPLATES = [
     '{kompassi_installation_slug}-{event_slug}-labour-conitea',
     '{kompassi_installation_slug}-{event_slug}-labour-info',
 ]
-INFOKALA_DEFAULT_EVENT = env('INFOKALA_DEFAULT_EVENT', default='tracon11')
+INFOKALA_DEFAULT_EVENT = env('INFOKALA_DEFAULT_EVENT', default='tracon2017')
 
 KOMPASSI_INSTALLATION_SLUG = env('KOMPASSI_INSTALLATION_SLUG', default='turska')
 KOMPASSI_HOST = env('KOMPASSI_HOST', default='https://kompassi.eu')

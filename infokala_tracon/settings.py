@@ -104,8 +104,8 @@ INFOKALA_ACCESS_GROUP_TEMPLATES = [
     '{infokala_installation_slug}-{event_slug}-users',
     '{kompassi_installation_slug}-{event_slug}-labour-conitea',
     '{kompassi_installation_slug}-{event_slug}-labour-info',
-    '{kompassi_installation_slug}-{event_slug}-labour-jarjestyksenvalvoja',
-    '{kompassi_installation_slug}-{event_slug}-labour-jv',
+    # '{kompassi_installation_slug}-{event_slug}-labour-jarjestyksenvalvoja',
+    # '{kompassi_installation_slug}-{event_slug}-labour-jv',
 ]
 INFOKALA_DEFAULT_EVENT = env('INFOKALA_DEFAULT_EVENT', default='tracon2017')
 INFOKALA_INSTALLATION_SLUG = env('INFOKALA_INSTALLATION_SLUG', default='infokala')

@@ -1,6 +1,8 @@
 infokala_default_event: tracon2021
 
 djangoapp_secret_managed: false
+djangoapp_admins:
+  - Santtu Pajukanta <santtu@pajukanta.fi>
 
 ingress_public_hostname: infokala.tracon.fi
 

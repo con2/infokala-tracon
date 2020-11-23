@@ -14,6 +14,9 @@ djangoapp_image: !Var djangoapp_name
 # Whether the secret of the name !Var djangoapp_name is managed by these templates or manually created
 djangoapp_secret_managed: true
 
+# A list of "Full Name <email@example.com>", no commas
+djangoapp_admins: []
+
 # djangoapp_tag: staging
 # djangoapp_repository: harbor.con2.fi/con2/djangoapp
 # djangoapp_image: !Format "{djangoapp_repository}:{djangoapp_tag}"
@@ -108,6 +111,10 @@ gunicorn_environment:
     value: !Var smtp_server
   - name: DEFAULT_FROM_EMAIL
     value: !Var smtp_default_from_email
+  - name: ADMINS
+    value: !Join
+      items: !Var djangoapp_admins
+      separator: ","
 
 # Default annotations work for nginx ingress with or without LetsEncrypt TLS. Override if you need something else.
 ingress_annotations: !If

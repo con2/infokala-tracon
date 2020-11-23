@@ -104,7 +104,7 @@ gunicorn_environment:
         key: kompassiClientSecret
   - name: ALLOWED_HOSTS
     value: !Var ingress_public_hostname
-  - name: SMTP_SERVER
+  - name: EMAIL_HOST
     value: !Var smtp_server
   - name: DEFAULT_FROM_EMAIL
     value: !Var smtp_default_from_email

@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 from django.core.management.base import BaseCommand, CommandError
 
 
@@ -7,30 +5,30 @@ def setup_basic_workflow(event_slug):
     from infokala.models import Workflow, State, MessageType, Message
 
     basic_workflow, unused = Workflow.objects.get_or_create(
-        name=u'Perustyönkulku',
+        name='Perustyönkulku',
         slug='basic'
     )
 
     lost_and_found_workflow, unused = Workflow.objects.get_or_create(
-        name=u'Löytötavaratyönkulku',
+        name='Löytötavaratyönkulku',
         slug='lost-and-found'
     )
 
     simple_workflow, unused = Workflow.objects.get_or_create(
-        name=u'Yksinkertainen työnkulku',
+        name='Yksinkertainen työnkulku',
         slug='simple'
     )
 
     order = 0
     for workflow, name, slug, initial, label_class, active in [
-        (basic_workflow, u'Avoinna', 'open', True, 'label-primary', True),
-        (basic_workflow, u'Hoidettu', 'resolved', False, 'label-success', False),
+        (basic_workflow, 'Avoinna', 'open', True, 'label-primary', True),
+        (basic_workflow, 'Hoidettu', 'resolved', False, 'label-success', False),
 
-        (lost_and_found_workflow, u'Kateissa', 'missing', True, 'label-primary', True),
-        (lost_and_found_workflow, u'Tuotu Infoon', 'found', False, 'label-info', True),
-        (lost_and_found_workflow, u'Palautettu omistajalle', 'returned', False, 'label-success', False),
+        (lost_and_found_workflow, 'Kateissa', 'missing', True, 'label-primary', True),
+        (lost_and_found_workflow, 'Tuotu Infoon', 'found', False, 'label-info', True),
+        (lost_and_found_workflow, 'Palautettu omistajalle', 'returned', False, 'label-success', False),
 
-        (simple_workflow, u'Kirjattu', 'recorded', True, 'label-primary', True),
+        (simple_workflow, 'Kirjattu', 'recorded', True, 'label-primary', True),
     ]:
         state, created = State.objects.get_or_create(
             workflow=workflow,
@@ -49,9 +47,9 @@ def setup_basic_workflow(event_slug):
         order += 10
 
     for name, slug, workflow in [
-        (u'Löytötavarat', 'lost-and-found', lost_and_found_workflow),
-        (u'Tehtävä', 'task', basic_workflow),
-        (u'Lokikirja', 'event', simple_workflow),
+        ('Löytötavarat', 'lost-and-found', lost_and_found_workflow),
+        ('Tehtävä', 'task', basic_workflow),
+        ('Lokikirja', 'event', simple_workflow),
     ]:
         message_type, unused = MessageType.objects.get_or_create(
             event_slug=event_slug,
@@ -70,9 +68,9 @@ def setup_basic_workflow(event_slug):
 class Command(BaseCommand):
     def add_arguments(self, parser):
         # Positional arguments
-        parser.add_argument('event_slugs', nargs='+', type=unicode)
+        parser.add_argument('event_slugs', nargs='+', type=str)
 
     def handle(self, *args, **opts):
         for event_slug in opts['event_slugs']:
-            print 'Setting up basic workflow for event', event_slug
+            print('Setting up basic workflow for event', event_slug)
             setup_basic_workflow(event_slug)

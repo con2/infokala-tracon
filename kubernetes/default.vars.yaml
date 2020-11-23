@@ -1,0 +1,124 @@
+# Note: For {dev.,beta.,}conikuvat.fi and larppikuvat.fi, djangoapp_tag is overridden in Jenkinsfile.
+
+# App specific settings
+infokala_default_event: example
+
+# Kompassi OAuth2 (NOTE: do not set if djangoapp_secret_managed: false)
+kompassi_client_id: ''
+kompassi_client_secret: ''
+
+# Note: If you use Skaffold/Emskaffolden, leave these at defaults and let Skaffold manage the images
+djangoapp_name: infokala
+djangoapp_image: !Var djangoapp_name
+
+# Whether the secret of the name !Var djangoapp_name is managed by these templates or manually created
+djangoapp_secret_managed: true
+
+# djangoapp_tag: staging
+# djangoapp_repository: harbor.con2.fi/con2/djangoapp
+# djangoapp_image: !Format "{djangoapp_repository}:{djangoapp_tag}"
+# djangoapp_static_image: !Format "{djangoapp_repository}-static:{djangoapp_tag}"
+
+smtp_server: ''
+smtp_default_from_email: ''
+
+# Set this to the public hostname of your service.
+ingress_public_hostname: !Format "{djangoapp_name}.localhost"
+
+# If you use ingress-nginx and cert-manager, TLS can be automatically configured by setting this to true.
+ingress_letsencrypt_enabled: false
+ingress_letsencrypt_cluster_issuer: letsencrypt-prod
+
+# NOTE: "managed" PostgreSQL should not be considered production-ready.
+postgres_managed: true
+postgres_image: postgres
+postgres_hostname: postgres
+postgres_username: !Var djangoapp_name
+postgres_database: !Var djangoapp_name
+postgres_storage_pvc_storageclass: !Void
+
+# Leave empty if you want to let kubernetes-secret-generator generate one for you
+postgres_password: ''
+
+# note: managed postgres doesn't provide ssl, only enable if using external postgres
+postgres_ssl: false
+
+# Whether or not "python manage.py migrate" should run as init container
+setup_should_run: true
+
+# Configuration vars end here. Configuration snippets follow. May be overridden for advanced configuration.
+
+# Security context for djangoapp and Celery pods
+# User 1000 is guaranteed to exist in the Docker image, only change if you know what you're doing
+gunicorn_pod_security_context:
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+gunicorn_container_security_context:
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+
+# Common environment vars for both djangoapp and celery pods.
+gunicorn_environment:
+  - name: POSTGRES_HOSTNAME
+    valueFrom:
+      secretKeyRef:
+        name: postgres
+        key: hostname
+  - name: POSTGRES_DATABASE
+    valueFrom:
+      secretKeyRef:
+        name: postgres
+        key: database
+  - name: POSTGRES_USERNAME
+    valueFrom:
+      secretKeyRef:
+        name: postgres
+        key: username
+  - name: POSTGRES_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: postgres
+        key: password
+  - !If
+      test: !Var postgres_ssl
+      then:
+        name: POSTGRES_EXTRAS
+        value: '?sslmode=require'
+  - name: SECRET_KEY
+    valueFrom:
+      secretKeyRef:
+        name: !Var djangoapp_name
+        key: secretKey
+  - name: INFOKALA_DEFAULT_EVENT
+    value: !Var infokala_default_event
+  - name: KOMPASSI_OAUTH2_CLIENT_ID
+    valueFrom:
+      secretKeyRef:
+        name: !Var djangoapp_name
+        key: kompassiClientId
+  - name: KOMPASSI_OAUTH2_CLIENT_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: !Var djangoapp_name
+        key: kompassiClientSecret
+  - name: ALLOWED_HOSTS
+    value: !Var ingress_public_hostname
+  - name: SMTP_SERVER
+    value: !Var smtp_server
+  - name: DEFAULT_FROM_EMAIL
+    value: !Var smtp_default_from_email
+
+# Default annotations work for nginx ingress with or without LetsEncrypt TLS. Override if you need something else.
+ingress_annotations: !If
+  test: !Var ingress_letsencrypt_enabled
+  then:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+
+ingress_tls: !If
+  test: !Var ingress_letsencrypt_enabled
+  then:
+    - secretName: ingress-letsencrypt
+      hosts:
+        - !Var ingress_public_hostname

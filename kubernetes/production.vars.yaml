@@ -1,0 +1,19 @@
+infokala_default_event: tracon2021
+
+djangoapp_secret_managed: false
+
+ingress_public_hostname: infokala.tracon.fi
+
+postgres_managed: false
+postgres_hostname: siilo.tracon.fi
+postgres_database: infokala
+postgres_username: infokala
+postgres_ssl: true
+
+setup_should_run: true
+
+smtp_server: sr1.pahai1.fi
+smtp_default_from_email: root@tracon.fi
+
+ingress_letsencrypt_enabled: true
+ingress_letsencrypt_cluster_issuer: letsencrypt-prod

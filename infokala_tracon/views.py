@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.contrib.staticfiles.views import serve
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.views import logout
-from django.http import HttpResponseForbidden
+from django.contrib.auth import logout
+from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import redirect, render
 
 from infokala.views import (
@@ -59,3 +59,7 @@ def logout_view(request):
 
     next_page = request.GET.get('next', settings.LOGOUT_REDIRECT_URL)
     return redirect(next_page)
+
+
+def status_view(request):
+    return JsonResponse({'status': 'OK'})

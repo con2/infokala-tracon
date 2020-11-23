@@ -1,7 +1,3 @@
-# encoding: utf-8
-
-from __future__ import unicode_literals
-
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
@@ -16,6 +12,7 @@ from .views import (
     MessageEventsView,
     slash_redirect_view,
     static_app_view,
+    status_view,
 )
 
 urlpatterns = [
@@ -43,8 +40,10 @@ urlpatterns = [
         name='infokala_message_events_view',
     ),
 
+    url(r'^api/v1/status/?$', status_view, name='status_view'),
 
-    url(r'^admin/', include(admin.site.urls)),
+
+    url(r'^admin/', admin.site.urls),
     url(r'^logout/?$', logout_view),
     url(r'', include('kompassi_oauth2.urls')),
 ]

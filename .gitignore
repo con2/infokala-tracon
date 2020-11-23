@@ -10,11 +10,11 @@
 /static/
 /venv*
 build/
-labour/static/labour/css/roster-*.css
-labour/static/labour/js/roster-*.js
 node_modules/
 nohup.out
 pip-log.txt
 rev-manifest.json
 tmp/
 virtualenv/
+*.compiled.yaml
+*.local.yaml

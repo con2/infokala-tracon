@@ -1,6 +1,4 @@
-# encoding: utf-8
 
-from __future__ import absolute_import, unicode_literals
 
 import os
 from datetime import datetime, timedelta
@@ -43,15 +41,16 @@ INSTALLED_APPS = (
     'infokala_tracon',
 )
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-)
+]
 
 AUTHENTICATION_BACKENDS = (
     'kompassi_oauth2.backends.KompassiOAuth2AuthenticationBackend',

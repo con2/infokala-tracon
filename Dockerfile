@@ -20,4 +20,4 @@ RUN env DEBUG=1 python manage.py collectstatic --noinput && \
 USER infokala
 EXPOSE 8000
 ENTRYPOINT ["scripts/docker-entrypoint.sh"]
-CMD ["gunicorn", "--bind=0.0.0.0", "--workers=4", "--access-logfile=-", "--capture-output", "infotv_tracon.wsgi"]
+CMD ["gunicorn", "--bind=0.0.0.0", "--workers=4", "--access-logfile=-", "--capture-output", "infokala_tracon.wsgi"]

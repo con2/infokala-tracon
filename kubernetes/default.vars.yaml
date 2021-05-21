@@ -13,6 +13,7 @@ djangoapp_image: !Var djangoapp_name
 
 # Whether the secret of the name !Var djangoapp_name is managed by these templates or manually created
 djangoapp_secret_managed: true
+djangoapp_secret_key: ''
 
 # A list of "Full Name <email@example.com>", no commas
 djangoapp_admins: []

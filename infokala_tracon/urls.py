@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.conf.urls import include, url
+from django.conf.urls import include
 from django.contrib import admin
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import RedirectView
@@ -14,36 +14,36 @@ from .views import (
     static_app_view,
     status_view,
 )
+from django.urls import path, re_path
 
 urlpatterns = [
     # XXX hardcoded
-    url(r'^$',
-        RedirectView.as_view(url='/events/{default_event}/messages'.format(default_event=settings.INFOKALA_DEFAULT_EVENT)),
+    path('', RedirectView.as_view(url='/events/{default_event}/messages'.format(default_event=settings.INFOKALA_DEFAULT_EVENT)),
         name='infokala_frontpage_redirect_view',
     ),
-    url(r'^events/(?P<event_slug>[a-z0-9-]+)/messages/$', static_app_view),
-    url(r'^events/[a-z0-9-]+/messages$', slash_redirect_view),
-    url(r'^events/(?P<event_slug>[a-z0-9-]+)/messages/config.js$',
+    re_path(r'^events/(?P<event_slug>[a-z0-9-]+)/messages/$', static_app_view),
+    re_path(r'^events/[a-z0-9-]+/messages$', slash_redirect_view),
+    re_path(r'^events/(?P<event_slug>[a-z0-9-]+)/messages/config.js$',
         csrf_exempt(ConfigView.as_view()),
         name='infokala_config_view',
     ),
-    url(r'^api/v1/events/(?P<event_slug>[a-z0-9-]+)/messages/?$',
+    re_path(r'^api/v1/events/(?P<event_slug>[a-z0-9-]+)/messages/?$',
         csrf_exempt(MessagesView.as_view()),
         name='infokala_messages_view',
     ),
-    url(r'^api/v1/events/(?P<event_slug>[a-z0-9-]+)/messages/(?P<message_id>\d+)/?$',
+    re_path(r'^api/v1/events/(?P<event_slug>[a-z0-9-]+)/messages/(?P<message_id>\d+)/?$',
         csrf_exempt(MessageView.as_view()),
         name='infokala_message_view',
     ),
-    url(r'^api/v1/events/(?P<event_slug>[a-z0-9-]+)/messages/(?P<message_id>\d+)/events/?$',
+    re_path(r'^api/v1/events/(?P<event_slug>[a-z0-9-]+)/messages/(?P<message_id>\d+)/events/?$',
         csrf_exempt(MessageEventsView.as_view()),
         name='infokala_message_events_view',
     ),
 
-    url(r'^api/v1/status/?$', status_view, name='status_view'),
+    re_path(r'^api/v1/status/?$', status_view, name='status_view'),
 
 
-    url(r'^admin/', admin.site.urls),
-    url(r'^logout/?$', logout_view),
-    url(r'', include('kompassi_oauth2.urls')),
+    path('admin/', admin.site.urls),
+    re_path(r'^logout/?$', logout_view),
+    path('', include('kompassi_oauth2.urls')),
 ]

@@ -7,7 +7,7 @@ RUN git clone --depth=1 https://github.com/kcsry/infokala && \
     NODE_ENV=production npm run prepublish && \
     rm -rf node_modules
 
-FROM python:3.11
+FROM python:3.12
 COPY --from=0 /usr/src/app/infokala /usr/src/app/infokala
 RUN mkdir /usr/src/app/infokala-tracon && \
     groupadd -r infokala && useradd -r -g infokala infokala

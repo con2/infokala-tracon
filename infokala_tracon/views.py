@@ -84,4 +84,4 @@ def default_event_redirect_view(request):
     from infokala.models import MessageType
 
     message_type = MessageType.objects.latest("id")
-    return redirect("infokala_messages_view", event_slug=message_type.event_slug)
+    return redirect("infokala_view", event_slug=message_type.event_slug)

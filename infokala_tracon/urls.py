@@ -19,7 +19,11 @@ from .views import (
 
 urlpatterns = [
     path("", default_event_redirect_view),
-    re_path(r"^events/(?P<event_slug>[a-z0-9-]+)/messages/$", static_app_view),
+    re_path(
+        r"^events/(?P<event_slug>[a-z0-9-]+)/messages/$",
+        static_app_view,
+        name="infokala_view",
+    ),
     re_path(r"^events/[a-z0-9-]+/messages$", slash_redirect_view),
     re_path(
         r"^events/(?P<event_slug>[a-z0-9-]+)/messages/config.js$",

@@ -1,8 +1,6 @@
 # Note: For {dev.,beta.,}conikuvat.fi and larppikuvat.fi, djangoapp_tag is overridden in Jenkinsfile.
 
 # App specific settings
-infokala_default_event: example
-
 # Kompassi OAuth2 (NOTE: do not set if djangoapp_secret_managed: false)
 kompassi_client_id: ''
 kompassi_client_secret: ''
@@ -94,8 +92,6 @@ gunicorn_environment:
       secretKeyRef:
         name: !Var djangoapp_name
         key: secretKey
-  - name: INFOKALA_DEFAULT_EVENT
-    value: !Var infokala_default_event
   - name: KOMPASSI_OAUTH2_CLIENT_ID
     valueFrom:
       secretKeyRef:

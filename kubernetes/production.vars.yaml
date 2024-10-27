@@ -1,5 +1,3 @@
-infokala_default_event: tracon2024
-
 djangoapp_secret_managed: false
 djangoapp_admins:
   - Santtu Pajukanta <santtu@pajukanta.fi>

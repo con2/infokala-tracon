@@ -30,6 +30,7 @@ ingress_public_hostname: !Format "{djangoapp_name}.localhost"
 # If you use ingress-nginx and cert-manager, TLS can be automatically configured by setting this to true.
 ingress_letsencrypt_enabled: false
 ingress_letsencrypt_cluster_issuer: letsencrypt-prod
+ingress_class_name: nginx
 
 # NOTE: "managed" PostgreSQL should not be considered production-ready.
 postgres_managed: true

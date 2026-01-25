@@ -34,7 +34,7 @@ jobs:
       build_json: ${{ steps.build.outputs.build_json }}
 
   deploy:
-    runs-on: self-hosted
+    runs-on: qb-arc-runners
     needs: build
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
     steps:

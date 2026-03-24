@@ -1,23 +1,37 @@
-FROM node:18
-WORKDIR /usr/src/app
-RUN git clone --depth=1 https://github.com/kcsry/infokala && \
-    rm -rf infokala/.git && \
-    cd infokala && \
-    npm install && \
-    NODE_ENV=production npm run prepublish && \
-    rm -rf node_modules
+FROM ghcr.io/astral-sh/uv:python3.14-bookworm AS builder
+ENV UV_COMPILE_BYTECODE=1
+ENV UV_LINK_MODE=copy
+ENV UV_PYTHON_DOWNLOADS=0
 
-FROM python:3.12
-COPY --from=0 /usr/src/app/infokala /usr/src/app/infokala
-RUN mkdir /usr/src/app/infokala-tracon && \
-    groupadd -r infokala && useradd -r -g infokala infokala
-WORKDIR /usr/src/app/infokala-tracon
-COPY requirements.txt /usr/src/app/infokala-tracon/
-RUN pip install --no-cache-dir -r requirements.txt -e ../infokala
-COPY . /usr/src/app/infokala-tracon
+WORKDIR /usr/src/app
+COPY pyproject.toml uv.lock manage.py ./
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --locked --no-install-project --no-dev
+COPY scripts /usr/src/app/scripts
+COPY infokala_tracon /usr/src/app/infokala_tracon
+COPY kompassi_oauth2 /usr/src/app/kompassi_oauth2
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --locked --no-dev
+
+ENV PATH="/usr/src/app/.venv/bin:$PATH"
 RUN env DEBUG=1 python manage.py collectstatic --noinput && \
-    python -m compileall -q .
-USER infokala
-EXPOSE 8000
-ENTRYPOINT ["scripts/docker-entrypoint.sh"]
-CMD ["gunicorn", "--bind=0.0.0.0", "--workers=4", "--access-logfile=-", "--capture-output", "infokala_tracon.wsgi"]
+    chmod 755 manage.py scripts/*.sh
+
+
+FROM python:3.14-slim-bookworm
+
+RUN groupadd -g 998 -r kompassi && useradd -r -g kompassi -u 998 kompassi && \
+    apt-get update && \
+    apt-get -y install libpq5 && \
+    rm -rf /var/lib/apt/lists
+COPY --from=builder --chown=root:root /usr/src/app /usr/src/app
+ENV PATH="/usr/src/app/.venv/bin:$PATH"
+
+USER kompassi
+WORKDIR /usr/src/app
+ENV PATH="/usr/src/app/.venv/bin:$PATH"
+# mount tmpfs at /tmp to silence "FontConfig: No writable cache directories" warnings
+ENV HOME=/tmp
+
+ENTRYPOINT ["/usr/src/app/scripts/docker-entrypoint.sh"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

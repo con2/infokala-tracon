@@ -1,7 +1,0 @@
-Django<5
-django-environ
-gunicorn
-psycopg2
-python-dateutil
-requests-oauthlib
-whitenoise

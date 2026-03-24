@@ -16,6 +16,9 @@ djangoapp_secret_key: ''
 # A list of "Full Name <email@example.com>", no commas
 djangoapp_admins: []
 
+djangoapp_workers: 1
+djangoapp_timeout_seconds: 30
+
 # djangoapp_tag: staging
 # djangoapp_repository: harbor.con2.fi/con2/djangoapp
 # djangoapp_image: !Format "{djangoapp_repository}:{djangoapp_tag}"

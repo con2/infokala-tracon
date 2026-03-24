@@ -3,6 +3,8 @@ from email.utils import parseaddr
 
 import environ
 
+from .event import get_event_or_404 as INFOKALA_GET_EVENT_OR_404  # noqa
+
 env = environ.Env(
     DEBUG=(bool, False),
 )

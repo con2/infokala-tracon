@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.staticfiles.views import serve
-from django.http import HttpResponseForbidden, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from infokala.views import (
     ConfigView as InfokalaConfigView,
@@ -16,6 +16,8 @@ from infokala.views import (
 from infokala.views import (
     MessageView as InfokalaMessageView,
 )
+
+from .event import get_event_or_404
 
 
 def is_user_allowed_to_access(user, event):
@@ -57,7 +59,7 @@ class ConfigView(AccessControlMixin, InfokalaConfigView):
 
 @login_required
 def static_app_view(request, event_slug):
-    event = settings.INFOKALA_GET_EVENT_OR_404(slug=event_slug)
+    event = get_event_or_404(slug=event_slug)
 
     if not is_user_allowed_to_access(request.user, event):
         return render(request, "infokala_tracon_forbidden.html", status=403)

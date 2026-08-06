@@ -12,36 +12,30 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      SKAFFOLD_DEFAULT_REPO: ghcr.io/con2
+    outputs:
+      tag: ${{ steps.meta.outputs.version }}
     steps:
       - uses: actions/checkout@v7
-      - id: cache-bin
-        uses: actions/cache@v6
-        with:
-          path: bin
-          key: ${{ runner.os }}-bin-skaffold-helm-1
-      - if: steps.cache-bin.outputs.cache-hit != 'true'
-        run: |
-          mkdir bin
-          curl -Lo bin/skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64
-          curl -Lo bin/kubectl https://dl.k8s.io/release/v1.36.2/bin/linux/amd64/kubectl
-          curl -fsSL https://get.helm.sh/helm-v4.2.3-linux-amd64.tar.gz | tar xz -C bin --strip-components=1 linux-amd64/helm
-          chmod +x bin/skaffold bin/kubectl bin/helm
-      - run: echo "$PWD/bin" >> $GITHUB_PATH
       - uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - uses: docker/setup-buildx-action@v4
-      - id: build
-        run: skaffold build --file-output build.json
-      - name: Store build.json artifact
-        uses: actions/upload-artifact@v7
+      - id: meta
+        uses: docker/metadata-action@v5
         with:
-          name: build-json
-          path: build.json
+          images: ghcr.io/con2/infokala
+          tags: |
+            type=sha,prefix=,format=short
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
   deploy:
     runs-on: qb-arc-runners
@@ -49,20 +43,13 @@ jobs:
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/download-artifact@v8
+      - uses: azure/setup-helm@v4
         with:
-          name: build-json
-      - id: cache-bin
-        uses: actions/cache@v6
-        with:
-          path: bin
-          key: ${{ runner.os }}-bin-skaffold-helm-1
-      - if: steps.cache-bin.outputs.cache-hit != 'true'
-        run: |
-          mkdir bin
-          curl -Lo bin/skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64
-          curl -Lo bin/kubectl https://dl.k8s.io/release/v1.36.2/bin/linux/amd64/kubectl
-          curl -fsSL https://get.helm.sh/helm-v4.2.3-linux-amd64.tar.gz | tar xz -C bin --strip-components=1 linux-amd64/helm
-          chmod +x bin/skaffold bin/kubectl bin/helm
-      - run: echo "$PWD/bin" >> $GITHUB_PATH
-      - run: skaffold deploy -a build.json
+          version: v4.2.3
+      - run: |
+          helm upgrade --install infokala chart \
+            --namespace infokala \
+            -f chart/values-production.yaml \
+            --set image.repository=ghcr.io/con2/infokala \
+            --set image.tag=${{ needs.build.outputs.tag }} \
+            --wait --timeout 300s

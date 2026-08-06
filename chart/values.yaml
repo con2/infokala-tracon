@@ -3,7 +3,7 @@
 # work out of the box without needing real secrets -- never deploy with these values as-is.
 
 image:
-  # Normally supplied by Skaffold's setValueTemplates at `helm upgrade` time (see skaffold.yaml).
+  # Normally supplied by --set at `helm upgrade` time in .github/workflows/cicd.yaml.
   # These defaults only matter for local `helm template`/`helm lint`.
   repository: ghcr.io/con2/infokala
   tag: latest

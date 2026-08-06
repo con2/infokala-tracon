@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gunicorn
+  labels:
+    {{- include "infokala.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "infokala.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "infokala.selectorLabels" . | nindent 8 }}
+    spec:
+      enableServiceLinks: false
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      initContainers:
+        - name: setup
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          args: ["python", "manage.py", "migrate"]
+          envFrom:
+            - configMapRef:
+                name: infokala
+            - secretRef:
+                name: {{ include "infokala.secretName" . }}
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+      containers:
+        - name: gunicorn
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: infokala
+            - secretRef:
+                name: {{ include "infokala.secretName" . }}
+          args:
+            - gunicorn
+            - --workers={{ .Values.djangoapp.workers }}
+            - --bind=0.0.0.0:8000
+            - --access-logfile=-
+            - --capture-output
+            - --timeout={{ .Values.djangoapp.timeoutSeconds }}
+            - infokala_tracon.wsgi:application
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+          startupProbe:
+            httpGet:
+              path: /api/v1/status
+              port: 8000
+              httpHeaders:
+                - name: Host
+                  value: {{ .Values.ingress.hostname | quote }}
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 5
+          livenessProbe:
+            httpGet:
+              path: /api/v1/status
+              port: 8000
+              httpHeaders:
+                - name: Host
+                  value: {{ .Values.ingress.hostname | quote }}
+            periodSeconds: 30
+          volumeMounts:
+            - mountPath: /tmp
+              name: temp
+      volumes:
+        - name: temp
+          emptyDir: {}

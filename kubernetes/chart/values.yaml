@@ -1,0 +1,39 @@
+# Real environment values live in values-production.yaml (and, later, values-staging.yaml).
+# This file's `secret.*` fields are obviously-bogus placeholders so `helm template`/`helm lint`
+# work out of the box without needing real secrets -- never deploy with these values as-is.
+
+image:
+  # Normally supplied by Skaffold's setValueTemplates at `helm upgrade` time (see skaffold.yaml).
+  # These defaults only matter for local `helm template`/`helm lint`.
+  repository: ghcr.io/con2/infokala
+  tag: latest
+
+djangoapp:
+  workers: 1
+  timeoutSeconds: 30
+  admins: [] # list of "Full Name <email@example.com>" strings
+
+ingress:
+  hostname: infokala.example.com # override per environment
+
+smtp:
+  server: ""
+  defaultFromEmail: spam@example.com
+
+postgres:
+  # Only used so scripts/docker-entrypoint.sh's wait-for-it TCP precheck targets the right
+  # host -- Django itself connects using secret.databaseUrl below, not this. Not secret.
+  hostname: postgres
+
+# Set to the name of a pre-existing, out-of-band-managed Secret to skip chart-owned Secret
+# creation entirely and have the Deployment reference it instead. THIS IS THE
+# PRODUCTION-RECOMMENDED PATH -- real secret values must never be committed to any
+# values-*.yaml. See templates/secret.yaml.
+existingSecretName: ""
+
+# Bogus placeholders, for local `helm template`/`helm lint` only -- see existingSecretName.
+secret:
+  secretKey: changeme
+  kompassiClientId: changeme
+  kompassiClientSecret: changeme
+  databaseUrl: "postgres://changeme:changeme@postgres:5432/changeme"

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: infokala
+  labels:
+    {{- include "infokala.labels" . | nindent 4 }}
+data:
+  ALLOWED_HOSTS: {{ .Values.ingress.hostname | quote }}
+  EMAIL_HOST: {{ .Values.smtp.server | quote }}
+  DEFAULT_FROM_EMAIL: {{ .Values.smtp.defaultFromEmail | quote }}
+  ADMINS: {{ join "," .Values.djangoapp.admins | quote }}
+  POSTGRES_HOSTNAME: {{ .Values.postgres.hostname | quote }}

@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: infokala
+  labels:
+    {{- include "infokala.labels" . | nindent 4 }}
+  annotations:
+    # TLS is always on for this chart (production + reserved staging only, no local/dev path).
+    # Hardcoded cluster issuer -- grep the repo for "letsencrypt-prod" if this ever needs to change.
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    traefik.ingress.kubernetes.io/router.middlewares: default-https-redirect@kubernetescrd
+spec:
+  ingressClassName: traefik
+  tls:
+    - secretName: ingress-letsencrypt
+      hosts:
+        - {{ .Values.ingress.hostname }}
+  rules:
+    - host: {{ .Values.ingress.hostname }}
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: gunicorn
+                port:
+                  number: 8000

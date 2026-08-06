@@ -1,0 +1,11 @@
+# Staging does not exist yet for infokala-tracon. This file exists only to prove that adding
+# a staging environment later needs zero chart/template changes -- just fill in real values
+# here and wire a `staging` Skaffold profile / CI job to use it (the `staging` profile in
+# skaffold.yaml already references this file). Everything below is a placeholder shape, not
+# real staging configuration.
+#
+# ingress:
+#   hostname: infokala-staging.tracon.fi
+# postgres:
+#   hostname: <staging external postgres host>
+# existingSecretName: infokala-staging

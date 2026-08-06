@@ -13,6 +13,6 @@ smtp:
   defaultFromEmail: root@tracon.fi
 
 # Real secrets are never stored in git. Production points at an in-cluster Secret created
-# out-of-band; see kubernetes/chart's README for the required keys (SECRET_KEY,
+# out-of-band; see templates/secret.yaml for the required keys (SECRET_KEY,
 # KOMPASSI_OAUTH2_CLIENT_ID, KOMPASSI_OAUTH2_CLIENT_SECRET, DATABASE_URL).
 existingSecretName: infokala

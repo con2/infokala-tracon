@@ -15,10 +15,10 @@ deploy:
   helm:
     releases:
       - name: infokala
-        chartPath: kubernetes/chart
+        chartPath: chart
         namespace: infokala
         valuesFiles:
-          - kubernetes/chart/values-production.yaml
+          - chart/values-production.yaml
         setValueTemplates:
           image.repository: "{{.IMAGE_REPO_infokala}}"
           image.tag: "{{.IMAGE_TAG_infokala}}"
@@ -31,10 +31,10 @@ profiles:
       helm:
         releases:
           - name: infokala
-            chartPath: kubernetes/chart
+            chartPath: chart
             namespace: infokala-staging
             valuesFiles:
-              - kubernetes/chart/values-staging.yaml
+              - chart/values-staging.yaml
             setValueTemplates:
               image.repository: "{{.IMAGE_REPO_infokala}}"
               image.tag: "{{.IMAGE_TAG_infokala}}"

@@ -9,7 +9,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked --no-install-project --no-dev
 COPY scripts /usr/src/app/scripts
 COPY infokala_tracon /usr/src/app/infokala_tracon
-COPY kompassi_oauth2 /usr/src/app/kompassi_oauth2
+COPY kompassi_oidc /usr/src/app/kompassi_oidc
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked --no-dev
 

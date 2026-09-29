@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "infokala-tracon"
 version = "0.1.0"
-description = "Tracon deployment integration for Infokala with Kompassi OAuth2"
+description = "Tracon deployment integration for Infokala with Kompassi OIDC"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
@@ -14,13 +14,13 @@ dependencies = [
   "gunicorn",
   "psycopg2",
   "python-dateutil",
-  "requests-oauthlib",
   "whitenoise",
   "infokala",
+  "mozilla-django-oidc>=5.0.2",
 ]
 
 [tool.uv.sources]
 infokala = { url = "https://github.com/kcsry/infokala/releases/download/v0.6.0rc0/infokala-0.6.0rc0-py3-none-any.whl" }
 
 [tool.setuptools]
-packages = ["infokala_tracon", "kompassi_oauth2"]
+packages = ["infokala_tracon", "kompassi_oidc"]

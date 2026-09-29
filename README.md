@@ -1,6 +1,6 @@
 # Tracon's deployment of [Infokala]
 
-This is a [Kompassi]-integrated deployment of [Infokala] that authenticates users from Kompassi via OAuth2 and gets event info from Kompassi using the public API of Kompassi.
+This is a [Kompassi]-integrated deployment of [Infokala] that authenticates users from Kompassi via OpenID Connect and gets event info from Kompassi using the public API of Kompassi.
 
 [Infokala]: https://github.com/kcsry/infokala "Infokala, the Info Log Management System for Tracon & Desucon"
 [Kompassi]: https://github.com/tracon/kompassi "Kompassi, the Tracon Event Management System"
@@ -11,7 +11,7 @@ Note that this repository does not contain the actual source code for the [Infok
 
 Please check out a suitable version of Infokala and install it in the same virtualenv using eg. `pip install -e .` (see below).
 
-This repository is responsible for setting up the Tracon/Kompassi specific bits for Infokala, such as the Kompassi OAuth2 based authentication and group membership based authorization.
+This repository is responsible for setting up the Tracon/Kompassi specific bits for Infokala, such as the Kompassi OIDC based authentication and group membership based authorization.
 
 ## Getting started
 
@@ -51,9 +51,11 @@ Now, in another terminal, install and run this application:
 
 ## Authentication and authorization
 
-Authentication is performed via OAuth2 against Kompassi. All users that are present in Kompassi are allowed to log in.
+Authentication is performed via OpenID Connect against Kompassi, using [mozilla-django-oidc](https://mozilla-django-oidc.readthedocs.io/) with the backend in `kompassi_oidc/backends.py`. All users that are present in Kompassi are allowed to log in. An account that existed before the move from Kompassi's legacy OAuth2 is matched by email address.
 
-Authorization is performed using group membership information extracted from the Kompassi `/api/v2/people/me` endpoint. Groups that grant access to different events' info logs are configurable. The admin group by default grants access to all events.
+The Kompassi OIDC application needs `RS256` as its algorithm and the redirect URI `https://<hostname>/oidc/callback/`. Its client ID and secret are read from the `KOMPASSI_OAUTH2_CLIENT_ID` and `KOMPASSI_OAUTH2_CLIENT_SECRET` environment variables, the names the legacy OAuth2 client used.
+
+Authorization is performed using the `groups` claim, which is mirrored into Django groups on every login. Groups that grant access to different events' info logs are configurable. The admin group by default grants access to all events.
 
 By default, these are configured as follows:
 
@@ -71,10 +73,6 @@ That would basically grant access to the organizing committee (*conitea*) and in
 
 ## Development gotchas
 
-### "OAuth2 MUST use HTTPS"
-
-Technically it's horribly wrong to use OAuth2 over insecure HTTP. However, it's tedious to set up TLS for development. That's why we monkey patch `oauthlib.oauth2:is_secure_transport` on `DEBUG = True`. See `infokala_tracon/settings.py`.
-
 ### Applications on `localhost` in different ports share the same cookies
 
 1. Run Kompassi at `localhost:8000`
@@ -83,7 +81,7 @@ Technically it's horribly wrong to use OAuth2 over insecure HTTP. However, it's 
 
 Expected results: You are logged in
 
-Actual results: 500 Internal Server Error due to session not having `oauth_state` in `/oauth2/callback`
+Actual results: the login fails at `/oidc/callback/` because the session no longer has the OIDC state
 
 Explanation: Both applications share the same set of cookies due to cookies being matched solely on the host name, not the port
 

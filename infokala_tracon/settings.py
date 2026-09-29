@@ -36,6 +36,7 @@ INSTALLED_APPS = (
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "mozilla_django_oidc",
     "infokala",
     "infokala_tracon",
 )
@@ -52,7 +53,7 @@ MIDDLEWARE = [
 ]
 
 AUTHENTICATION_BACKENDS = (
-    "kompassi_oauth2.backends.KompassiOAuth2AuthenticationBackend",
+    "kompassi_oidc.backends.KompassiOIDCAuthenticationBackend",
     "django.contrib.auth.backends.ModelBackend",
 )
 
@@ -92,7 +93,10 @@ STATIC_URL = "/static/"
 STATIC_ROOT = mkpath("static")
 APPEND_SLASH = False
 
-LOGIN_URL = "/oauth2/login"
+LOGIN_URL = "oidc_authentication_init"
+LOGIN_REDIRECT_URL = "/"
+# Not "/": it leads to a login_required view, which would restart the failed login in a loop.
+LOGIN_REDIRECT_URL_FAILURE = "login_failed_view"
 LOGOUT_URL = "/logout"
 LOGOUT_REDIRECT_URL = "https://kompassi.eu/logout"
 
@@ -111,17 +115,19 @@ INFOKALA_INSTALLATION_SLUG = env("INFOKALA_INSTALLATION_SLUG", default="infokala
 
 KOMPASSI_INSTALLATION_SLUG = env("KOMPASSI_INSTALLATION_SLUG", default="turska")
 KOMPASSI_HOST = env("KOMPASSI_HOST", default="https://kompassi.eu")
-KOMPASSI_OAUTH2_AUTHORIZATION_URL = "{KOMPASSI_HOST}/oauth2/authorize".format(
-    **locals()
-)
-KOMPASSI_OAUTH2_TOKEN_URL = "{KOMPASSI_HOST}/oauth2/token".format(**locals())
-KOMPASSI_OAUTH2_CLIENT_ID = env(
+OIDC_RP_CLIENT_ID = env(
     "KOMPASSI_OAUTH2_CLIENT_ID", default="kompassi_insecure_test_client_id"
 )
-KOMPASSI_OAUTH2_CLIENT_SECRET = env(
+OIDC_RP_CLIENT_SECRET = env(
     "KOMPASSI_OAUTH2_CLIENT_SECRET", default="kompassi_insecure_test_client_secret"
 )
-KOMPASSI_OAUTH2_SCOPE = ["read"]
-KOMPASSI_API_V2_USER_INFO_URL = "{KOMPASSI_HOST}/api/v2/people/me".format(**locals())
+OIDC_OP_AUTHORIZATION_ENDPOINT = f"{KOMPASSI_HOST}/oidc/authorize/"
+OIDC_OP_TOKEN_ENDPOINT = f"{KOMPASSI_HOST}/oidc/token/"
+OIDC_OP_USER_ENDPOINT = f"{KOMPASSI_HOST}/oidc/userinfo/"
+OIDC_OP_JWKS_ENDPOINT = f"{KOMPASSI_HOST}/oidc/.well-known/jwks.json"
+OIDC_RP_SIGN_ALGO = "RS256"
+OIDC_RP_SCOPES = "openid email profile"
+OIDC_USE_PKCE = True
+
 KOMPASSI_API_V2_EVENT_INFO_URL_TEMPLATE = "{kompassi_host}/api/v2/events/{event_slug}"
 KOMPASSI_ADMIN_GROUP = env("KOMPASSI_ADMIN_GROUP", default="admins")

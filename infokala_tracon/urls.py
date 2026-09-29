@@ -11,6 +11,7 @@ from .views import (
     MessagesView,
     MessageView,
     default_event_redirect_view,
+    login_failed_view,
     logout_view,
     slash_redirect_view,
     static_app_view,
@@ -48,5 +49,6 @@ urlpatterns = [
     re_path(r"^api/v1/status/?$", status_view, name="status_view"),
     path("admin/", admin.site.urls),
     re_path(r"^logout/?$", logout_view),
-    path("", include("kompassi_oauth2.urls")),
+    re_path(r"^login-failed/?$", login_failed_view, name="login_failed_view"),
+    path("oidc/", include("mozilla_django_oidc.urls")),
 ]

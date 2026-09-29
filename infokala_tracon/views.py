@@ -78,6 +78,10 @@ def logout_view(request):
     return redirect(next_page)
 
 
+def login_failed_view(request):
+    return render(request, "infokala_tracon_login_failed.html", status=403)
+
+
 def status_view(request):
     return JsonResponse({"status": "OK"})
 

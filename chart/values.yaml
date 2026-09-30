@@ -13,8 +13,7 @@ djangoapp:
   timeoutSeconds: 30
   admins: [] # list of "Full Name <email@example.com>" strings
 
-ingress:
-  hostname: infokala.example.com # override per environment
+hostname: infokala.example.com # override per environment
 
 smtp:
   server: ""

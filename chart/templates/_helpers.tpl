@@ -13,3 +13,7 @@ component: gunicorn
 {{- define "infokala.secretName" -}}
 {{ .Values.existingSecretName | default "infokala" }}
 {{- end -}}
+
+{{- define "infokala.tlsSecretName" -}}
+tls-infokala
+{{- end -}}

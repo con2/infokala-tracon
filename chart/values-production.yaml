@@ -1,5 +1,4 @@
-ingress:
-  hostname: infokala.tracon.fi
+hostname: infokala.tracon.fi
 
 djangoapp:
   admins:

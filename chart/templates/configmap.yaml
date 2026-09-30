@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "infokala.labels" . | nindent 4 }}
 data:
-  ALLOWED_HOSTS: {{ .Values.ingress.hostname | quote }}
+  ALLOWED_HOSTS: {{ .Values.hostname | quote }}
   EMAIL_HOST: {{ .Values.smtp.server | quote }}
   DEFAULT_FROM_EMAIL: {{ .Values.smtp.defaultFromEmail | quote }}
   ADMINS: {{ join "," .Values.djangoapp.admins | quote }}

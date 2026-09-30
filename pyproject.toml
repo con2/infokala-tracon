@@ -12,11 +12,11 @@ dependencies = [
   "Django",
   "django-environ",
   "gunicorn",
-  "psycopg2",
   "python-dateutil",
   "whitenoise",
   "infokala",
   "mozilla-django-oidc>=5.0.2",
+  "psycopg[c]>=3.3.6",
 ]
 
 [tool.uv.sources]
